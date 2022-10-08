@@ -1,0 +1,42 @@
+---
+title: "Project01_IB"
+author: "Ian Beren"
+date: '2022-10-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+dat <- read.csv('lead-iq-01.csv')
+library(ggplot2)
+library(sqldf)
+library(tidyverse)
+```
+
+
+
+
+```{r}
+ggplot(data=dat, aes(Smelter, IQ)) + stat_summary(geom='bar', fun='mean')
+
+meanvars = aggregate(dat$IQ, list(dat$Smelter), FUN=mean)
+```
+Based on the graph, we can see the mean for those who live further from the smelter is higher (Mean = `r round(meanvars[1,2],2)`) then for those who live nearer to the smelter (Mean = `r round(meanvars[2,2],2)`). 
+
+```{r}
+#is.data.frame(dat)
+
+
+knitr::kable (dat %>%                               
+  group_by(Smelter) %>% 
+  summarize(Mean = mean(IQ),
+            StdDev = sd(IQ),
+            Minimum = min(IQ),
+            Q1 = quantile(IQ, 0.25),
+            Median = median(IQ),
+            Q3 = quantile(IQ, 0.75),
+            Maximum = max(IQ)), digits=2)
+```
+
+Based on the summary statistics provided above, it is noted there there is a potential data issue with the maximum value of IQ for those who live further from the smelter, having a value of 999. This will likely need to be addresed before further analysis is conducted.
