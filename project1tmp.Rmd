@@ -18,6 +18,9 @@ library(tidyverse)
 
 
 ```{r}
+# fixing data point with IQ = 999, correct value is 99
+dat[dat==999] <- 99
+
 ggplot(data=dat, aes(Smelter, IQ)) + stat_summary(geom='bar', fun='mean')
 
 meanvars = aggregate(dat$IQ, list(dat$Smelter), FUN=mean)
